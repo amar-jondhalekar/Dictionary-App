@@ -69,3 +69,9 @@ section.data {
 .loading{
     display: none;
 }
+
+section.data p.def{
+    font-size: 20px;
+    color: #2d3748;
+    line-height: 1.6;
+}
