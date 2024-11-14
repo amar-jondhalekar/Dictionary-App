@@ -63,4 +63,9 @@ section.data {
     max-width: 600px;
     margin: 0 auto;
     margin-top: 20px;
+    text-align: center;
+}
+
+.loading{
+    display: none;
 }
