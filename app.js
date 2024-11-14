@@ -14,4 +14,11 @@ searchBtn.addEventListener('click', function(e){
 
     // call API get data 
     
+    if(word === ''){
+        alert('Word is required');
+        return;
+    }
+
+    getData(word);
+
 });
