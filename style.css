@@ -11,3 +11,7 @@ body{
     font-family: 'Muli', sans-serif;
     min-height: 100vh;
 }
+.container{
+    width: 1152px;
+    max-width: 90%;
+}
