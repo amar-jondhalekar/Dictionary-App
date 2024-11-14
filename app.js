@@ -13,4 +13,5 @@ searchBtn.addEventListener('click', function(e){
     let word = input.valuel;
 
     // call API get data 
+    
 });
