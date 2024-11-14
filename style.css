@@ -14,4 +14,9 @@ body{
 .container{
     width: 1152px;
     max-width: 90%;
+    margin: 0 auto;
+}
+nav {
+    background: #553c9a;
+    color: #fff;
 }
