@@ -58,3 +58,9 @@ button{
     padding: 0 20px;
     cursor: pointer;
 }
+
+section.data {
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
