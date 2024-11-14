@@ -7,4 +7,10 @@ let searchBtn = document.querySelector('#search');
 searchBtn.addEventListener('click', function(e){
     // to prevent refresh page 
     e.preventDefault();
+    
+    // Get input data 
+
+    let word = input.valuel;
+
+    // call API get data 
 });
