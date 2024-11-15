@@ -13,6 +13,11 @@ searchBtn.addEventListener('click', function(e){
     e.preventDefault();
     
 
+    // clear old data
+    audioBox.innerHTML = '';
+    notFound.innerText = '';
+    defBox.innerText = '';
+
     // Get input data 
 
     let word = input.value;
