@@ -48,5 +48,10 @@ async function getData(word){
         })
         return;
     }
+
+    // Result found
+    let defination = data[0].shortdef[0];
+    
+
     console.log(data);
 }
