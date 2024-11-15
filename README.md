@@ -64,7 +64,13 @@ Alternatively, you can simply visit the live demo link provided above.
 
 ## App Preview
 
-![App Preview](/img/dictionary%20app%20light%20mode.jpeg)
+**Light Mode:**
+
+![Light Mode Preview](/img/dictionary%20app%20light%20mode.jpeg)
+
+**Dark Mode:**
+
+![Dark Mode Preview](/img/dictionary%20app%20dark%20mode.jpeg)
 
 ---
 
