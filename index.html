@@ -1,15 +1,23 @@
+<!-- 
+  @author Amar Jondhalkar
+  @version 1.0.0
+  @license MIT
+  Copyright 2024. All Rights Reserved.
+  -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Dictionary</title>
+    <title>LexWord - Dictionary</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <h1>Interactive Dictionary</h1>
+            <h1>LexWord <span style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: small;">by amar</span></h1>
             <button class="dark-mode-btn">🌙</button>
         </header>
 
@@ -18,8 +26,8 @@
             <button class="search-btn" id="search-btn">🔍</button>
         </div>
 
-        <div id="loading" class="loading">Loading...</div>
-        <div id="not-found" class="not-found">Word not found!</div>
+        <div id="loading" style="display: none;" class="loading">Loading...</div>
+        <div id="not-found" style="display: none;" class="not-found">Word not found!</div>
 
         <div class="main-content">
             <div class="word-of-the-day">
