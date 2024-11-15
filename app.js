@@ -4,6 +4,7 @@ let searchBtn = document.querySelector('#search');
 let apiKey = '4cae68e5-0dae-4c8a-8458-10d73c31224a';
 let notFound = document.querySelector('.not_found');
 let defBox = document.querySelector('.def');
+let audioBox = document.querySelector('.audio');
 
 // add eventlistener 
 
@@ -11,6 +12,7 @@ searchBtn.addEventListener('click', function(e){
     // to prevent refresh page 
     e.preventDefault();
     
+
     // Get input data 
 
     let word = input.value;
@@ -65,7 +67,11 @@ async function getData(word){
 }
 
 function renderSound(soundName){
-    //https://media.marriam-webster.com/soundc11
-    let subfolder = soundName
+    // Updated URL format for the audio file
+    let soundSrc = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${soundName.charAt(0)}/${soundName}.mp3`;
 
+    let aud = document.createElement('audio');
+    aud.src = soundSrc;
+    aud.controls = true;
+    audioBox.appendChild(aud);
 }
