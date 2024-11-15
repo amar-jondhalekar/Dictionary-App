@@ -75,3 +75,13 @@ section.data p.def{
     color: #2d3748;
     line-height: 1.6;
 }
+
+.suggested {
+    background: #8794f4;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 4px;
+    margin-right: 10px;
+    margin-top: 5px;
+    display: inline-block;
+}
