@@ -71,20 +71,44 @@ async function fetchWordData(word) {
    
     try {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+        
         if (response.ok) {
             const data = await response.json();
             const wordData = data[0];
             updateRecentWords(word);
             displayWordData(wordData);
         } else {
-            notFound.style.display = 'block'; // Show "Word not found"
-            loading.style.display = 'none';   // Hide "Loading"
+            const errorData = await response.json();
+            
+            if (errorData.title === 'No Definitions Found') {
+                notFound.style.display = 'block'; // Show "Word not found"
+                loading.style.display = 'none';   // Hide "Loading"
+                
+                // If result is suggestions
+                if (Array.isArray(errorData.message)) {
+                    let heading = document.createElement('h3');
+                    heading.innerText = 'Did you mean?';
+                    notFound.appendChild(heading);
+                    
+                    errorData.message.forEach(suggestion => {
+                        let suggestionElement = document.createElement('span');
+                        suggestionElement.classList.add('suggested');
+                        suggestionElement.innerText = suggestion;
+                        suggestionElement.addEventListener('click', () => {
+                            fetchWordData(suggestion); // Trigger search for the suggested word
+                        });
+                        notFound.appendChild(suggestionElement);
+                    });
+                }
+            }
         }
     } catch (error) {
         notFound.style.display = 'block'; // Show "Word not found"
         loading.style.display = 'none';   // Hide "Loading"
     }
 }
+
+
 
 function displayWordData(data) {
     const word = data.word;
@@ -120,24 +144,13 @@ function displayWordData(data) {
     loading.style.display = 'none';  // Hide loading
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const searchBtn = document.getElementById('search-btn');
-    const input = document.getElementById('search-input');
-
-    // Check if searchBtn is found in the DOM
-    if (searchBtn) {
-        searchBtn.addEventListener('click', () => {
-            const word = input.value.trim();
-            if (word) {
-                fetchWordData(word);
-                input.value = ''; // Clear the input after search
-            }
-        });
-    } else {
-        console.error("Search button not found in the DOM.");
+searchBtn.addEventListener('click', () => {
+    const word = input.value.trim();
+    if (word) {
+        fetchWordData(word);
+        input.value = '';
     }
 });
-
 
 document.addEventListener('DOMContentLoaded', function () {
     const darkModeButton = document.querySelector('.dark-mode-btn');

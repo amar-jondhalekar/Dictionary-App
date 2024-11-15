@@ -231,3 +231,13 @@ body.dark-mode .favorite-words {
 }
 
 
+.suggested {
+    color: blue;
+    cursor: pointer;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.suggested:hover {
+    text-decoration: underline;
+}
