@@ -69,14 +69,14 @@ async function fetchWordData(word) {
     synonymsBox.innerHTML = '';
     antonymsBox.innerHTML = '';
     audioBox.innerHTML = '';
-    
+   
     try {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
         if (response.ok) {
             const data = await response.json();
             const wordData = data[0];
-            updateRecentWords(word);
-            displayWordData(wordData);
+            updateRecentWords(word); // Update recent words
+            displayWordData(wordData); // Display word data
         } else {
             notFound.style.display = 'block'; // Show "Word not found"
             loading.style.display = 'none';   // Hide "Loading"
@@ -96,35 +96,90 @@ function displayWordData(data) {
     const antonyms = data.meanings[0].antonyms || [];
     const audioUrl = data.phonetics[0]?.audio || '';
 
+    // Clear previous data and update UI with new word information
     definitionBox.innerText = definition;
-    phoneticBox.innerText = `Phonetic: ${phonetic}`;
-    exampleBox.innerText = `Example: ${example}`;
-    synonymsBox.innerHTML = synonyms.length ? `<strong>Synonyms:</strong> ${synonyms.join(', ')}` : 'No synonyms found.';
-    antonymsBox.innerHTML = antonyms.length ? `<strong>Antonyms:</strong> ${antonyms.join(', ')}` : 'No antonyms found.';
-    audioBox.innerHTML = audioUrl ? `<audio controls><source src="${audioUrl}" type="audio/mp3"></audio>` : 'No audio available.';
+    phoneticBox.innerText = phonetic;
+    exampleBox.innerText = example;
 
-    // Hide loading and "word not found" messages, display results
-    loading.style.display = 'none';
-    notFound.style.display = 'none';
+    if (synonyms.length > 0) {
+        synonymsBox.innerHTML = `<strong>Synonyms:</strong> ${synonyms.join(', ')}`;
+    } else {
+        synonymsBox.innerText = 'No synonyms found.';
+    }
+
+    if (antonyms.length > 0) {
+        antonymsBox.innerHTML = `<strong>Antonyms:</strong> ${antonyms.join(', ')}`;
+    } else {
+        antonymsBox.innerText = 'No antonyms found.';
+    }
+
+    if (audioUrl) {
+        audioBox.innerHTML = `<button onclick="new Audio('${audioUrl}').play()" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">🔊 Listen</button>`;
+    } else {
+        audioBox.innerText = 'Audio not available.';
+    }
+
+    // Adding a description in table format
+    const descriptionTable = `
+        <table class="min-w-full border-collapse">
+            <thead>
+                <tr class="border-b">
+                    <th class="px-4 py-2">Property</th>
+                    <th class="px-4 py-2">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b">
+                    <td class="px-4 py-2">Word</td>
+                    <td class="px-4 py-2">${word}</td>
+                </tr>
+                <tr class="border-b">
+                    <td class="px-4 py-2">Phonetic</td>
+                    <td class="px-4 py-2">${phonetic}</td>
+                </tr>
+                <tr class="border-b">
+                    <td class="px-4 py-2">Definition</td>
+                    <td class="px-4 py-2">${definition}</td>
+                </tr>
+                <tr class="border-b">
+                    <td class="px-4 py-2">Example</td>
+                    <td class="px-4 py-2">${example}</td>
+                </tr>
+                <tr class="border-b">
+                    <td class="px-4 py-2">Synonyms</td>
+                    <td class="px-4 py-2">${synonyms.length > 0 ? synonyms.join(', ') : 'N/A'}</td>
+                </tr>
+                <tr class="border-b">
+                    <td class="px-4 py-2">Antonyms</td>
+                    <td class="px-4 py-2">${antonyms.length > 0 ? antonyms.join(', ') : 'N/A'}</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+    
+    document.getElementById('word-description').innerHTML = descriptionTable;
+
+    loading.style.display = 'none';  // Hide loading
 }
 
 searchBtn.addEventListener('click', () => {
     const word = input.value.trim();
-    if (word) fetchWordData(word);
-});
-
-input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        const word = input.value.trim();
-        if (word) fetchWordData(word);
+    if (word) {
+        fetchWordData(word);
+        input.value = ''; // Clear the input after search
     }
 });
 
-darkModeButton.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
+document.addEventListener('DOMContentLoaded', function () {
+    // Check if the dark mode button exists before adding event listener
+    if (darkModeButton) {
+        darkModeButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+    }
 });
 
-// Initialize UI with recent and favorite words
+// Initialize Word of the Day and Recent/Favorite Words
+setWordOfTheDay();
 renderRecentWords();
 renderFavoriteWords();
-setWordOfTheDay();
