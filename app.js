@@ -61,8 +61,8 @@ function setWordOfTheDay() {
 
 async function fetchWordData(word) {
     // Show the loading message and hide any previous errors or results
-    loading.style.display = 'block';
-    notFound.style.display = 'none';
+    loading.style.display = 'block';  // Show loading
+    notFound.style.display = 'none';  // Hide "not found"
     definitionBox.innerHTML = '';
     phoneticBox.innerHTML = '';
     exampleBox.innerHTML = '';
