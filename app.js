@@ -11,7 +11,6 @@ const recentWordsList = document.getElementById('recent-words');
 const favoriteWordsList = document.getElementById('favorite-words');
 const loading = document.getElementById('loading');
 const notFound = document.getElementById('not-found');
-const darkModeButton = document.querySelector('.dark-mode-btn');
 
 // Store recent and favorite words in localStorage
 function updateRecentWords(word) {
@@ -75,8 +74,8 @@ async function fetchWordData(word) {
         if (response.ok) {
             const data = await response.json();
             const wordData = data[0];
-            updateRecentWords(word); // Update recent words
-            displayWordData(wordData); // Display word data
+            updateRecentWords(word);
+            displayWordData(wordData);
         } else {
             notFound.style.display = 'block'; // Show "Word not found"
             loading.style.display = 'none';   // Hide "Loading"
@@ -96,7 +95,6 @@ function displayWordData(data) {
     const antonyms = data.meanings[0].antonyms || [];
     const audioUrl = data.phonetics[0]?.audio || '';
 
-    // Clear previous data and update UI with new word information
     definitionBox.innerText = definition;
     phoneticBox.innerText = phonetic;
     exampleBox.innerText = example;
@@ -119,67 +117,42 @@ function displayWordData(data) {
         audioBox.innerText = 'Audio not available.';
     }
 
-    // Adding a description in table format
-    const descriptionTable = `
-        <table class="min-w-full border-collapse">
-            <thead>
-                <tr class="border-b">
-                    <th class="px-4 py-2">Property</th>
-                    <th class="px-4 py-2">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="border-b">
-                    <td class="px-4 py-2">Word</td>
-                    <td class="px-4 py-2">${word}</td>
-                </tr>
-                <tr class="border-b">
-                    <td class="px-4 py-2">Phonetic</td>
-                    <td class="px-4 py-2">${phonetic}</td>
-                </tr>
-                <tr class="border-b">
-                    <td class="px-4 py-2">Definition</td>
-                    <td class="px-4 py-2">${definition}</td>
-                </tr>
-                <tr class="border-b">
-                    <td class="px-4 py-2">Example</td>
-                    <td class="px-4 py-2">${example}</td>
-                </tr>
-                <tr class="border-b">
-                    <td class="px-4 py-2">Synonyms</td>
-                    <td class="px-4 py-2">${synonyms.length > 0 ? synonyms.join(', ') : 'N/A'}</td>
-                </tr>
-                <tr class="border-b">
-                    <td class="px-4 py-2">Antonyms</td>
-                    <td class="px-4 py-2">${antonyms.length > 0 ? antonyms.join(', ') : 'N/A'}</td>
-                </tr>
-            </tbody>
-        </table>
-    `;
-    
-    document.getElementById('word-description').innerHTML = descriptionTable;
-
     loading.style.display = 'none';  // Hide loading
 }
 
-searchBtn.addEventListener('click', () => {
-    const word = input.value.trim();
-    if (word) {
-        fetchWordData(word);
-        input.value = ''; // Clear the input after search
+document.addEventListener('DOMContentLoaded', () => {
+    const searchBtn = document.getElementById('search-btn');
+    const input = document.getElementById('search-input');
+
+    // Check if searchBtn is found in the DOM
+    if (searchBtn) {
+        searchBtn.addEventListener('click', () => {
+            const word = input.value.trim();
+            if (word) {
+                fetchWordData(word);
+                input.value = ''; // Clear the input after search
+            }
+        });
+    } else {
+        console.error("Search button not found in the DOM.");
     }
 });
 
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Check if the dark mode button exists before adding event listener
+    const darkModeButton = document.querySelector('.dark-mode-btn');
+
+    // Check if the element exists before adding event listener
     if (darkModeButton) {
         darkModeButton.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
         });
+    } else {
+        console.error("Dark mode button not found.");
     }
 });
 
-// Initialize Word of the Day and Recent/Favorite Words
-setWordOfTheDay();
-renderRecentWords();
-renderFavoriteWords();
+
+setWordOfTheDay();  // Initialize Word of the Day
+renderRecentWords();  // Load Recent Words
+renderFavoriteWords(); // Load Favorite Words
