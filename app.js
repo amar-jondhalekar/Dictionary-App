@@ -60,8 +60,16 @@ function setWordOfTheDay() {
 }
 
 async function fetchWordData(word) {
+    // Show the loading message and hide any previous errors or results
     loading.style.display = 'block';
     notFound.style.display = 'none';
+    definitionBox.innerHTML = '';
+    phoneticBox.innerHTML = '';
+    exampleBox.innerHTML = '';
+    synonymsBox.innerHTML = '';
+    antonymsBox.innerHTML = '';
+    audioBox.innerHTML = '';
+    
     try {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
         if (response.ok) {
@@ -70,12 +78,12 @@ async function fetchWordData(word) {
             updateRecentWords(word);
             displayWordData(wordData);
         } else {
-            notFound.style.display = 'block';
-            loading.style.display = 'none';
+            notFound.style.display = 'block'; // Show "Word not found"
+            loading.style.display = 'none';   // Hide "Loading"
         }
     } catch (error) {
-        notFound.style.display = 'block';
-        loading.style.display = 'none';
+        notFound.style.display = 'block'; // Show "Word not found"
+        loading.style.display = 'none';   // Hide "Loading"
     }
 }
 
@@ -94,7 +102,10 @@ function displayWordData(data) {
     synonymsBox.innerHTML = synonyms.length ? `<strong>Synonyms:</strong> ${synonyms.join(', ')}` : 'No synonyms found.';
     antonymsBox.innerHTML = antonyms.length ? `<strong>Antonyms:</strong> ${antonyms.join(', ')}` : 'No antonyms found.';
     audioBox.innerHTML = audioUrl ? `<audio controls><source src="${audioUrl}" type="audio/mp3"></audio>` : 'No audio available.';
+
+    // Hide loading and "word not found" messages, display results
     loading.style.display = 'none';
+    notFound.style.display = 'none';
 }
 
 searchBtn.addEventListener('click', () => {
