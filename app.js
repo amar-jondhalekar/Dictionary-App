@@ -1,97 +1,119 @@
-// get input 
-let input = document.querySelector('#input');
-let searchBtn = document.querySelector('#search');
-let apiKey = '4cae68e5-0dae-4c8a-8458-10d73c31224a';
-let notFound = document.querySelector('.not_found');
-let defBox = document.querySelector('.def');
-let audioBox = document.querySelector('.audio');
-let loading = document.querySelector('.loading');
-let readButton;  // declare readButton to be used later
+const searchBtn = document.getElementById('search-btn');
+const input = document.getElementById('search-input');
+const wordOfTheDayBox = document.getElementById('word-of-the-day');
+const definitionBox = document.getElementById('definition-box');
+const phoneticBox = document.getElementById('phonetic-box');
+const exampleBox = document.getElementById('example-box');
+const synonymsBox = document.getElementById('synonyms-box');
+const antonymsBox = document.getElementById('antonyms-box');
+const audioBox = document.getElementById('audio-box');
+const recentWordsList = document.getElementById('recent-words');
+const favoriteWordsList = document.getElementById('favorite-words');
+const loading = document.getElementById('loading');
+const notFound = document.getElementById('not-found');
+const darkModeButton = document.querySelector('.dark-mode-btn');
 
-// add eventlistener 
-searchBtn.addEventListener('click', function(e){
-    // to prevent refresh page 
-    e.preventDefault();
-    
-    // clear old data
-    audioBox.innerHTML = '';
-    notFound.innerText = '';
-    defBox.innerText = '';
-    if (readButton) {
-        readButton.remove();  // remove old button if it exists
+// Store recent and favorite words in localStorage
+function updateRecentWords(word) {
+    let recentWords = JSON.parse(localStorage.getItem('recentWords')) || [];
+    if (!recentWords.includes(word)) {
+        recentWords.unshift(word);
+        if (recentWords.length > 5) recentWords.pop();
+        localStorage.setItem('recentWords', JSON.stringify(recentWords));
     }
+    renderRecentWords();
+}
 
-    // Get input data 
-    let word = input.value;
-
-    // call API get data 
-    if(word === ''){
-        alert('Word is required');
-        return;
+function updateFavoriteWords(word) {
+    let favoriteWords = JSON.parse(localStorage.getItem('favoriteWords')) || [];
+    if (!favoriteWords.includes(word)) {
+        favoriteWords.push(word);
+        localStorage.setItem('favoriteWords', JSON.stringify(favoriteWords));
     }
+    renderFavoriteWords();
+}
 
-    getData(word);
+function renderRecentWords() {
+    const recentWords = JSON.parse(localStorage.getItem('recentWords')) || [];
+    recentWordsList.innerHTML = '';
+    recentWords.forEach(word => {
+        let li = document.createElement('li');
+        li.textContent = word;
+        recentWordsList.appendChild(li);
+    });
+}
+
+function renderFavoriteWords() {
+    const favoriteWords = JSON.parse(localStorage.getItem('favoriteWords')) || [];
+    favoriteWordsList.innerHTML = '';
+    favoriteWords.forEach(word => {
+        let li = document.createElement('li');
+        li.textContent = word;
+        favoriteWordsList.appendChild(li);
+    });
+}
+
+function setWordOfTheDay() {
+    const randomWord = ['cogent', 'ephemeral', 'sagacious', 'euphoria', 'serendipity'];
+    const word = randomWord[Math.floor(Math.random() * randomWord.length)];
+    wordOfTheDayBox.innerText = word;
+}
+
+async function fetchWordData(word) {
+    loading.style.display = 'block';
+    notFound.style.display = 'none';
+    try {
+        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+        if (response.ok) {
+            const data = await response.json();
+            const wordData = data[0];
+            updateRecentWords(word);
+            displayWordData(wordData);
+        } else {
+            notFound.style.display = 'block';
+            loading.style.display = 'none';
+        }
+    } catch (error) {
+        notFound.style.display = 'block';
+        loading.style.display = 'none';
+    }
+}
+
+function displayWordData(data) {
+    const word = data.word;
+    const phonetic = data.phonetic || 'N/A';
+    const definition = data.meanings[0].definitions[0].definition || 'N/A';
+    const example = data.meanings[0].definitions[0].example || 'No example found.';
+    const synonyms = data.meanings[0].synonyms || [];
+    const antonyms = data.meanings[0].antonyms || [];
+    const audioUrl = data.phonetics[0]?.audio || '';
+
+    definitionBox.innerText = definition;
+    phoneticBox.innerText = `Phonetic: ${phonetic}`;
+    exampleBox.innerText = `Example: ${example}`;
+    synonymsBox.innerHTML = synonyms.length ? `<strong>Synonyms:</strong> ${synonyms.join(', ')}` : 'No synonyms found.';
+    antonymsBox.innerHTML = antonyms.length ? `<strong>Antonyms:</strong> ${antonyms.join(', ')}` : 'No antonyms found.';
+    audioBox.innerHTML = audioUrl ? `<audio controls><source src="${audioUrl}" type="audio/mp3"></audio>` : 'No audio available.';
+    loading.style.display = 'none';
+}
+
+searchBtn.addEventListener('click', () => {
+    const word = input.value.trim();
+    if (word) fetchWordData(word);
 });
 
-async function getData(word){
-    loading.style.display = 'block';
-    // Ajax call
-    const response = await fetch(`https://www.dictionaryapi.com/api/v3/references/learners/json/${word}?key=${apiKey}`);
-    const data = await response.json();
-    console.log(data);
-
-    // if empty result 
-    if(!data.length){
-        loading.style.display = 'none';
-        notFound.innerText = 'No result found';
-        return;  
+input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const word = input.value.trim();
+        if (word) fetchWordData(word);
     }
+});
 
-    // If result is suggestions  
-    if(typeof data[0] === 'string'){
-        loading.style.display = 'none';
-        let heading = document.createElement('h3');
-        heading.innerText = 'Did you mean?';
-        notFound.appendChild(heading);
-        data.forEach(element => {
-            let suggestion = document.createElement('span');
-            suggestion.classList.add('suggested');
-            suggestion.innerText = element;
-            notFound.appendChild(suggestion);
-        })
-        return;
-    }
+darkModeButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+});
 
-    // Result found
-    loading.style.display = 'none';
-    let definition = data[0].shortdef[0];
-    defBox.innerText = definition;
-
-    // Add Read Definition button
-    readButton = document.createElement('button');
-    readButton.innerText = 'Read Definition';
-    readButton.classList.add('read-button');
-    defBox.appendChild(readButton);
-
-    // Add event listener to read the definition out loud
-    readButton.addEventListener('click', () => {
-        let utterance = new SpeechSynthesisUtterance(definition);
-        speechSynthesis.speak(utterance);
-    });
-
-    // Sound 
-    const soundName = data[0].hwi.prs[0].sound.audio;
-    if(soundName){
-        renderSound(soundName);
-    }
-}
-
-function renderSound(soundName){
-    // Updated URL format for the audio file
-    let soundSrc = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${soundName.charAt(0)}/${soundName}.mp3`;
-
-    let aud = document.createElement('audio');
-    aud.src = soundSrc;
-    aud.controls = true;
-    audioBox.appendChild(aud);
-}
+// Initialize UI with recent and favorite words
+renderRecentWords();
+renderFavoriteWords();
+setWordOfTheDay();
