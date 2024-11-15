@@ -3,30 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Dictionary App </title>
+    <title>Interactive Dictionary</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-     <nav>
-        <div class="container">
-            <h1> Dictionary <span style="font-family:'Courier New', Courier, monospace; font-size: small;">by amar</span></h1>
+    <div class="container">
+        <header class="header">
+            <h1>Interactive Dictionary</h1>
+            <button class="dark-mode-btn">🌙</button>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Search for a word..." />
+            <button class="search-btn" id="search-btn">🔍</button>
         </div>
-     </nav>
-     <section class="input container">
-        <h2> Find any word exist in the world :) </h2>
-        <div class="form_wrap">
-            <div class="input_wrap">
-              <input type="text" placeholder="Type a word" id="input">
-              <button id="search"> Search </button>  
+
+        <div id="loading" class="loading">Loading...</div>
+        <div id="not-found" class="not-found">Word not found!</div>
+
+        <div class="main-content">
+            <div class="word-of-the-day">
+                <p><strong>Word of the Day:</strong> <span id="word-of-the-day"></span></p>
+            </div>
+
+            <div class="results">
+                <div class="definition" id="definition-box"></div>
+                <div class="details">
+                    <div class="phonetic" id="phonetic-box"></div>
+                    <div class="example" id="example-box"></div>
+                </div>
+
+                <div class="synonyms-antonyms">
+                    <div class="synonyms" id="synonyms-box"></div>
+                    <div class="antonyms" id="antonyms-box"></div>
+                </div>
+
+                <div id="audio-box" class="audio-box"></div>
+            </div>
+
+            <div class="recent-favorite-box">
+                <div class="recent-words">
+                    <h2>Recent Words</h2>
+                    <ul id="recent-words"></ul>
+                </div>
+
+                <div class="favorite-words">
+                    <h2>Favorite Words</h2>
+                    <ul id="favorite-words"></ul>
+                </div>
             </div>
         </div>
-     </section>
-     <section class="data container">
-        <span class="loading">Loading...</span>
-        <p class="def"></p>
-        <div class="audio"></div>
-        <div class="not_found"></div>
-     </section>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
