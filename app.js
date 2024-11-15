@@ -3,6 +3,7 @@ let input = document.querySelector('#input');
 let searchBtn = document.querySelector('#search');
 let apiKey = '4cae68e5-0dae-4c8a-8458-10d73c31224a';
 let notFound = document.querySelector('.not_found');
+let defBox = document.querySelector('.def');
 
 // add eventlistener 
 
@@ -51,7 +52,20 @@ async function getData(word){
 
     // Result found
     let defination = data[0].shortdef[0];
-    
+    defBox.innerText = defination;
+
+
+    // Sound 
+    const soundName = data[0].hwi.prs[0].sound.audio;
+    if(soundName){
+        renderSound(soundName);
+    }
 
     console.log(data);
+}
+
+function renderSound(soundName){
+    //https://media.marriam-webster.com/soundc11
+    let subfolder = soundName
+
 }
